@@ -1,6 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+
+const projects = [
+  {
+    title: "Sistem Parkir Universitas IPWIJA",
+    description:
+      "Sistem Parkir Universitas IPWIJA adalah sebuah aplikasi berbasis Python untuk mengelola parkir kendaraan di lingkungan kampus. Aplikasi ini mencakup fitur-fitur seperti",
+    github: "https://github.com/RezaR2P/parkir_sistem",
+    image: "/img/project/parkir.avif",
+    stacks: ["Python", "opencv", "pandas", "qrcode"],
+  },
+];
 ---
 
 <Layout title="Eza — Web Developer">
@@ -12,13 +23,17 @@ import ProjectCard from "../components/ProjectCard.astro";
           <div
             class="grid grid-cols-1 gap-5 py-5 sm:grid-cols-2 md:grid-cols-3"
           >
-            <ProjectCard
-              title="Baso Yen"
-              description="Website company profile"
-              github="https://github.com/..."
-              image="https://images.unsplash.com/photo-1613816493575-b180590d69a9?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              stacks={["React", "Express", "MySQL"]}
-            />
+            {
+              projects.map((project) => (
+                <ProjectCard
+                  title={project.title}
+                  description={project.description}
+                  github={project.github}
+                  image={project.image}
+                  stacks={project.stacks}
+                />
+              ))
+            }
           </div>
         </div>
       </div>
