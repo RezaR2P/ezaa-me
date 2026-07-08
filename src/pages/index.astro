@@ -1,9 +1,57 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Navbar from "../components/Navbar.astro";
+import Badge from "../components/Badge.astro";
+import Card from "../components/Card.astro";
+const skills = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "React",
+  "Vite",
+  "Tailwind CSS",
+  "Git",
+  "Github",
+  "Node.js",
+  "Express.js",
+  "MySql",
+  "Docker",
+  "Linux",
+];
 ---
 
 <Layout title="Eza — Web Developer">
-  <Navbar />
-  <h1 class="mt-20 text-center text-7xl font-bold">Halo, saya Eza 👋</h1>
+  <main>
+    <section class="px-0 py-1.5">
+      <div class="mx-auto max-w-prose">
+        <div class="prose">
+          <h1 class="mb mt-10 text-xl leading-13 font-medium md:text-2xl">
+            Reza Ramdan Permana
+          </h1>
+          <p class="mb-5 leading-8 tracking-wide">
+            Hi, I'm Reza Ramdan Permana — a Fullstack Developer in progress and
+            Informatics student from Bandung, Indonesia. I enjoy building things
+            on the web, from interactive interfaces to backend systems that
+            actually work.
+          </p>
+          <p class="my-5 leading-8 tracking-wide">
+            I'm drawn to programming because of the problem-solving process —
+            there's a unique satisfaction when something finally clicks after
+            hours of debugging.
+          </p>
+          <p class="my-5 leading-8 tracking-wide">
+            Outside of coding, I tinker with IoT — I once built a GPS tracker
+            using a NEO GPS module. When I'm not at my desk, you'll find me
+            playing games, watching anime, or reading books on tech and personal
+            development.
+          </p>
+          <h2 class="text-center text-xl leading-13 font-medium md:text-xl">
+            My Tech Stack
+          </h2>
+          <div class="flex flex-wrap gap-1">
+            {skills.map((skill) => <Badge name={skill} />)}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </Layout>
