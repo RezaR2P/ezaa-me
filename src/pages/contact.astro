@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import InstagramIcon from "../components/InstagramIcon.astro";
+import LinkedIcon from "../components/LinkedIcon.astro";
+import GmailIcon from "../components/GmailIcon.astro";
+---
+
+<Layout title="Contact | Eza">
+  <main>
+    <section class="px-0 py-1.5">
+      <div class="mx-auto max-w-prose">
+        <div class="prose">
+          <h1 class="my-12 text-center text-3xl font-bold">React Me!</h1>
+          <div class="mx-auto max-w-75">
+            <div class="mb-5 flex items-center gap-3">
+              <GmailIcon class="h-8 w-8" />
+              <a href="mailto:eeza.dev@gmail.com">eeza.dev@gmail.com</a>
+            </div>
+            <div class="mb-5 flex items-center gap-3">
+              <LinkedIcon class="h-8 w-8" />
+              <a
+                href="http://www.linkedin.com/in/reza-ramdan-permana"
+                target="_blank">Reza Ramdan Permana</a
+              >
+            </div>
+            <div class="mb-5 flex items-center gap-3">
+              <InstagramIcon class="h-8 w-8" />
+              <a href="https://instagram.com/kucinghitam.js" target="_blank"
+                >@kucinghitam.js</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
