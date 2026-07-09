@@ -1,0 +1,49 @@
+body {
+  background-color: #1a1a1a;
+  color: #f4f4f5; /* Menggantikan text-gray-100 */
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: #ffffff; /* Menggantikan text-heading dark:text-white */
+  font-family:
+    "Lexend",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+}
+
+a {
+  color: #9ca3af; /* Menggantikan dark:text-gray-400 */
+  transition: color 0.2s ease-out; /* Menggantikan transition duration-200 ease-out */
+}
+
+a:hover {
+  color: #f3f4f6; /* Menggantikan dark:hover:text-gray-100 */
+}
+
+a.router-link-exact-active {
+  /* Kamu bisa tentukan warna khusus di sini jika warna aktifnya berbeda */
+  color: #ffffff;
+}
