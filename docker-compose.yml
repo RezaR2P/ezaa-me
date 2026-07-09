@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: astro_web_app
+    container_name: portofolio-frontend
     ports:
       - "8080:80"
-    restart: always
+    restart: unless-stopped
