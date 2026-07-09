@@ -1,0 +1,13 @@
+services:
+  astro-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: astro_web_app
+    ports:
+      - "8082:4321" # Mengubah port 4321 di container agar bisa diakses via localhost:8082
+    environment:
+      - HOST=0.0.0.0
+      - PORT=4321
+      - NODE_ENV=production
+    restart: always
