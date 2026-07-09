@@ -4,6 +4,9 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
+COPY . .
+RUN npm run build
+
 FROM node:lts-alpine AS runtime
 WORKDIR /app
 
