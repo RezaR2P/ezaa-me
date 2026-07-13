@@ -1,6 +1,10 @@
-body {
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&display=swap");
+
+body,
+p {
   background-color: #1a1a1a;
-  color: #f4f4f5; /* Menggantikan text-gray-100 */
+  color: #f4f4f5;
   font-family:
     "Inter",
     -apple-system,
@@ -19,7 +23,7 @@ h1,
 h2,
 h3,
 h4 {
-  color: #ffffff; /* Menggantikan text-heading dark:text-white */
+  color: #ffffff;
   font-family:
     "Lexend",
     -apple-system,
