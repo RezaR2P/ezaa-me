@@ -11,30 +11,115 @@ const sortedPosts = posts.sort(
   (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
     new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 );
+
+const allTags = Array.from(
+  new Set(posts.flatMap((post) => post.data.tags || [])),
+).sort();
 ---
 
 <Layout title="Blog | Eza">
   <main class="w-full">
-    <section class="px-4 py-12">
+    <section class="px-4 py-12 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-3xl">
         <h1
-          class="mb-12 text-center text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white"
+          class="mb-4 text-center text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white"
         >
           Blog
         </h1>
+        <p class="mb-8 text-center text-gray-600 dark:text-gray-300">
+          Tulisan tentang teknologi, pengembangan web, dan pengalaman lainnya.
+        </p>
+
+        <div class="relative mb-8">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Cari artikel berdasarkan judul atau deskripsi..."
+            class="w-full rounded-xl border border-gray-300 bg-white px-5 py-3 pl-12 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+          />
+
+          <svg
+            class="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+
+          <button
+            id="clear-search"
+            class="absolute top-1/2 right-4 hidden -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        {
+          allTags.length > 0 && (
+            <div
+              class="mb-10 flex flex-wrap justify-center gap-2"
+              id="tag-filters"
+            >
+              <button
+                class="filter-btn active rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                data-filter="all"
+              >
+                Semua
+              </button>
+              {allTags.map((tag) => (
+                <button
+                  class="filter-btn rounded-full bg-gray-100 px-4 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  data-filter={tag}
+                >
+                  #{tag}
+                </button>
+              ))}
+            </div>
+          )
+        }
+
         <div
           id="filter-status"
           class="mb-6 hidden items-center justify-between rounded-lg bg-blue-50 px-4 py-3 dark:bg-blue-900/20"
         >
           <span class="text-sm text-blue-800 dark:text-blue-200">
-            Menampilkan postingan dengan tag:
-            <strong id="active-filter-name" class="font-bold"></strong>
+            Menampilkan postingan dengan tag: <strong
+              id="active-filter-name"
+              class="font-bold"></strong>
           </span>
           <button
             id="clear-filter"
             class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-300"
           >
             Hapus Filter
+          </button>
+        </div>
+
+        <div id="no-results" class="hidden py-12 text-center">
+          <p class="text-lg text-gray-500 dark:text-gray-400">
+            Tidak ada artikel yang cocok dengan pencarian Anda.
+          </p>
+          <button
+            id="reset-filters"
+            class="mt-4 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Reset Filter & Pencarian
           </button>
         </div>
 
@@ -46,6 +131,8 @@ const sortedPosts = posts.sort(
                 data-tags={
                   post.data.tags ? JSON.stringify(post.data.tags) : "[]"
                 }
+                data-title={post.data.title.toLowerCase()}
+                data-description={(post.data.description || "").toLowerCase()}
               >
                 <a href={`/blog/${post.id}`} class="group/link block">
                   <h2 class="mb-2 text-xl font-bold text-gray-800 transition-colors group-hover/link:text-blue-600 dark:text-gray-100 dark:group-hover/link:text-blue-400">
@@ -75,7 +162,7 @@ const sortedPosts = posts.sort(
                         <button
                           type="button"
                           data-tag={tag}
-                          class="filter-tag-btn relative z-10 cursor-pointer rounded-full bg-gray-100 px-2.5 py-2 text-xs font-medium text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-blue-900 dark:hover:text-blue-200"
+                          class="filter-tag-btn relative z-10 cursor-pointer rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-blue-900 dark:hover:text-blue-200"
                         >
                           #{tag}
                         </button>
@@ -92,55 +179,163 @@ const sortedPosts = posts.sort(
   </main>
 
   <script>
-    const filterBtns = document.querySelectorAll(".filter-tag-btn");
+    // --- Variabel DOM ---
+    const searchInput = document.getElementById(
+      "search-input",
+    ) as HTMLInputElement;
+    const clearSearchBtn = document.getElementById("clear-search");
+    const noResultsMsg = document.getElementById("no-results");
+    const blogList = document.getElementById("blog-list");
     const blogItems = document.querySelectorAll(".filter-item");
+
+    // Filter Vars
+    const filterBtns = document.querySelectorAll(".filter-btn");
     const filterStatus = document.getElementById("filter-status");
     const activeFilterName = document.getElementById("active-filter-name");
     const clearFilterBtn = document.getElementById("clear-filter");
+    const resetFiltersBtn = document.getElementById("reset-filters");
 
-    function applyFilter(tag: string) {
-      if (!filterStatus || !activeFilterName) return;
+    let currentTagFilter = "all";
+    let currentSearchQuery = "";
 
-      filterStatus.classList.remove("hidden");
-      filterStatus.classList.add("flex");
-      activeFilterName.textContent = `#${tag}`;
+    // --- Fungsi Utama Filter & Search ---
+    function filterItems() {
+      let visibleCount = 0;
 
       blogItems.forEach((item) => {
         const htmlItem = item as HTMLElement;
-        const itemTags = JSON.parse(htmlItem.getAttribute("data-tags") || "[]");
+        const tags = JSON.parse(htmlItem.getAttribute("data-tags") || "[]");
+        const title = htmlItem.getAttribute("data-title") || "";
+        const description = htmlItem.getAttribute("data-description") || "";
 
-        if (itemTags.includes(tag)) {
+        // Cek Tag
+        const matchesTag =
+          currentTagFilter === "all" || tags.includes(currentTagFilter);
+
+        // Cek Search (Judul atau Deskripsi)
+        const matchesSearch =
+          title.includes(currentSearchQuery) ||
+          description.includes(currentSearchQuery);
+
+        if (matchesTag && matchesSearch) {
           htmlItem.style.display = "block";
-          htmlItem.animate([{ opacity: 0.5 }, { opacity: 1 }], {
-            duration: 300,
-            fill: "forwards",
-          });
+          visibleCount++;
         } else {
           htmlItem.style.display = "none";
         }
       });
+
+      // Tampilkan pesan jika tidak ada hasil
+      if (noResultsMsg && blogList) {
+        if (visibleCount === 0) {
+          noResultsMsg.classList.remove("hidden");
+          blogList.classList.add("hidden");
+        } else {
+          noResultsMsg.classList.add("hidden");
+          blogList.classList.remove("hidden");
+        }
+      }
     }
 
-    function clearFilter() {
-      if (!filterStatus) return;
-      filterStatus.classList.add("hidden");
-      filterStatus.classList.remove("flex");
+    // --- Event Listeners: Search ---
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        currentSearchQuery = (e.target as HTMLInputElement).value
+          .toLowerCase()
+          .trim();
 
-      blogItems.forEach((item) => {
-        (item as HTMLElement).style.display = "block";
+        // Toggle tombol clear
+        if (clearSearchBtn) {
+          clearSearchBtn.classList.toggle("hidden", currentSearchQuery === "");
+        }
+
+        filterItems();
+      });
+    }
+
+    if (clearSearchBtn) {
+      clearSearchBtn.addEventListener("click", () => {
+        if (searchInput) {
+          searchInput.value = "";
+          currentSearchQuery = "";
+          clearSearchBtn.classList.add("hidden");
+          searchInput.focus();
+          filterItems();
+        }
+      });
+    }
+
+    // --- Event Listeners: Tags ---
+    function updateFilterButtons(activeTag: string) {
+      filterBtns.forEach((btn) => {
+        const tag = btn.getAttribute("data-filter");
+        const isActive = tag === activeTag;
+
+        if (isActive) {
+          btn.classList.remove(
+            "bg-gray-100",
+            "text-gray-600",
+            "dark:bg-gray-800",
+            "dark:text-gray-300",
+          );
+          btn.classList.add("bg-blue-600", "text-white");
+        } else {
+          btn.classList.remove("bg-blue-600", "text-white");
+          btn.classList.add(
+            "bg-gray-100",
+            "text-gray-600",
+            "dark:bg-gray-800",
+            "dark:text-gray-300",
+          );
+        }
       });
     }
 
     filterBtns.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const target = e.target as HTMLElement;
-        const tag = target.getAttribute("data-tag");
-        if (tag) applyFilter(tag);
+      btn.addEventListener("click", () => {
+        const tag = btn.getAttribute("data-filter");
+        if (tag) {
+          currentTagFilter = tag;
+          updateFilterButtons(tag);
+
+          // Update UI Status
+          if (filterStatus && activeFilterName) {
+            if (tag === "all") {
+              filterStatus.classList.add("hidden");
+            } else {
+              filterStatus.classList.remove("hidden");
+              filterStatus.classList.add("flex");
+              activeFilterName.textContent = `#${tag}`;
+            }
+          }
+          filterItems();
+        }
       });
     });
 
     if (clearFilterBtn) {
-      clearFilterBtn.addEventListener("click", clearFilter);
+      clearFilterBtn.addEventListener("click", () => {
+        currentTagFilter = "all";
+        updateFilterButtons("all");
+        if (filterStatus) filterStatus.classList.add("hidden");
+        filterItems();
+      });
+    }
+
+    if (resetFiltersBtn) {
+      resetFiltersBtn.addEventListener("click", () => {
+        // Reset Search
+        currentSearchQuery = "";
+        if (searchInput) searchInput.value = "";
+        if (clearSearchBtn) clearSearchBtn.classList.add("hidden");
+
+        // Reset Tag
+        currentTagFilter = "all";
+        updateFilterButtons("all");
+        if (filterStatus) filterStatus.classList.add("hidden");
+
+        filterItems();
+      });
     }
   </script>
 </Layout>

@@ -29,7 +29,7 @@ const isoDate = new Date(post.data.date).toISOString().split("T")[0];
 <Layout title={post.data.title}>
   <main class="w-full">
     <article class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
-      <header class="mb-10 border-b border-gray-200 pb-8 dark:border-gray-800">
+      <header class="mb-10 border-b border-gray-200 pb-8 dark:border-gray-500">
         <div
           class="mb-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400"
         >
@@ -57,14 +57,9 @@ const isoDate = new Date(post.data.date).toISOString().split("T")[0];
           )
         }
       </header>
-
-      <!-- Bagian gambar cover dihapus sepenuhnya -->
-
-      <!-- Konten Markdown (gambar bisa dimasukkan langsung di sini) -->
       <div class="prose prose-lg prose-slate dark:prose-invert max-w-none">
         <Content />
       </div>
     </article>
   </main>
 </Layout>
-
