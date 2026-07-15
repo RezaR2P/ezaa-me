@@ -37,17 +37,3 @@ h4 {
     "Helvetica Neue",
     sans-serif;
 }
-
-a {
-  color: #9ca3af; /* Menggantikan dark:text-gray-400 */
-  transition: color 0.2s ease-out; /* Menggantikan transition duration-200 ease-out */
-}
-
-a:hover {
-  color: #f3f4f6; /* Menggantikan dark:hover:text-gray-100 */
-}
-
-a.router-link-exact-active {
-  /* Kamu bisa tentukan warna khusus di sini jika warna aktifnya berbeda */
-  color: #ffffff;
-}
