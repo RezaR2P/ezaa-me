@@ -7,16 +7,21 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # PENTING: Ganti 'ubuntu-latest' dengan 'self-hosted'
+    # Ini memerintahkan GitHub untuk mengirim job ini ke server Ubuntu Anda
+    runs-on: self-hosted
 
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/ezaa-me
-            git pull origin main
-            docker compose up -d --build
+      # 1. Checkout kode sumber (wajib agar file ada di server)
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Jalankan perintah deployment langsung di server
+      # Tidak perlu SSH lagi karena kita sudah ada di dalamnya!
+      - name: Deploy Application
+        run: |
+          echo "Memulai deployment di server lokal..."
+          cd ~/ezaa-me
+          git pull origin main
+          docker compose up -d --build
+          echo "Deployment selesai!"
