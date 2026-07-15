@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Badge from "../components/Badge.astro";
+
 const skills = [
   "HTML",
   "CSS",
@@ -9,44 +10,58 @@ const skills = [
   "Vite",
   "Tailwind CSS",
   "Git",
-  "Github",
+  "GitHub",
   "Node.js",
   "Express.js",
-  "MySql",
+  "MySQL",
   "Docker",
   "Linux",
 ];
 ---
 
-<Layout title="Eza — Web Developer">
-  <main>
-    <section class="px-0 py-1.5">
-      <div class="mx-auto max-w-prose">
-        <div class="prose">
-          <h1 class="mb mt-10 text-xl leading-13 font-medium md:text-2xl">
+<Layout title="About | Eza">
+  <main class="w-full">
+    <section class="px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl">
+        <div class="mb-10">
+          <h1
+            class="mb-6 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white"
+          >
             Reza Ramdan Permana
           </h1>
-          <p class="mb-5 leading-8 tracking-wide">
-            Hi, I'm Reza Ramdan Permana — a Fullstack Developer in progress and
-            Informatics student from Bandung, Indonesia. I enjoy building things
-            on the web, from interactive interfaces to backend systems that
-            actually work.
-          </p>
-          <p class="my-5 leading-8 tracking-wide">
-            I'm drawn to programming because of the problem-solving process —
-            there's a unique satisfaction when something finally clicks after
-            hours of debugging.
-          </p>
-          <p class="my-5 leading-8 tracking-wide">
-            Outside of coding, I tinker with IoT — I once built a GPS tracker
-            using a NEO GPS module. When I'm not at my desk, you'll find me
-            playing games, watching anime, or reading books on tech and personal
-            development.
-          </p>
-          <h2 class="text-center text-xl leading-13 font-medium md:text-xl">
+
+          <div class="prose prose-lg prose-slate dark:prose-invert">
+            <p class="leading-relaxed text-gray-600 dark:text-gray-300">
+              Hi, I'm <strong class="text-gray-900 dark:text-white"
+                >Reza Ramdan Permana</strong
+              > — a Fullstack Developer in progress and Informatics student from Bandung,
+              Indonesia. I enjoy building things on the web, from interactive interfaces
+              to backend systems that actually work.
+            </p>
+
+            <p class="leading-relaxed text-gray-600 dark:text-gray-300">
+              I'm drawn to programming because of the problem-solving process —
+              there's a unique satisfaction when something finally clicks after
+              hours of debugging.
+            </p>
+
+            <p class="leading-relaxed text-gray-600 dark:text-gray-300">
+              Outside of coding, I tinker with IoT — I once built a GPS tracker
+              using a NEO GPS module. When I'm not at my desk, you'll find me
+              playing games, watching anime, or reading books on tech and
+              personal development.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-200 pt-8 dark:border-gray-800">
+          <h2
+            class="mb-6 text-center text-xl font-bold text-gray-900 dark:text-white"
+          >
             My Tech Stack
           </h2>
-          <div class="flex flex-wrap gap-1">
+
+          <div class="flex flex-wrap justify-center gap-2">
             {skills.map((skill) => <Badge name={skill} />)}
           </div>
         </div>

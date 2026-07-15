@@ -1,9 +1,12 @@
 ---
-interface Props {
+export interface Props {
   name: string;
 }
-
 const { name } = Astro.props;
 ---
 
-<span class="rounded border px-3 py-1 text-sm">{name}</span>
+<span
+  class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+>
+  {name}
+</span>
