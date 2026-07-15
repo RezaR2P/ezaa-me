@@ -1,0 +1,295 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+const tilEntries = await getCollection("til", ({ data }) => {
+  return data.draft !== true;
+});
+
+const sortedTil = tilEntries.sort(
+  (a: CollectionEntry<"til">, b: CollectionEntry<"til">) =>
+    new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
+);
+
+const allTags = Array.from(
+  new Set(tilEntries.flatMap((item) => item.data.tags || []))
+).sort();
+---
+
+<Layout title="TIL | Eza">
+  <main class="w-full">
+    <section class="px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl">
+        <h1 class="mb-4 text-center text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+          Today I Learned
+        </h1>
+        <p class="mb-8 text-center text-gray-600 dark:text-gray-300">
+          Catatan kecil tentang hal-hal baru yang saya pelajari hari ini.
+        </p>
+
+        <div class="mb-8 relative">
+          <input 
+            type="text" 
+            id="search-input"
+            placeholder="Cari catatan berdasarkan judul atau deskripsi..." 
+            class="w-full rounded-xl border border-gray-300 bg-white px-5 py-3 pl-12 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
+          />
+          <!-- Icon Search -->
+          <svg class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <!-- Tombol Clear (Muncul saat mengetik) -->
+          <button 
+            id="clear-search" 
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hidden"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Filter Tags Section -->
+        {allTags.length > 0 && (
+          <div class="mb-10 flex flex-wrap justify-center gap-2" id="tag-filters">
+            <button 
+              class="filter-btn active rounded-full px-4 py-1.5 text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700"
+              data-filter="all"
+            >
+              Semua
+            </button>
+            {allTags.map((tag) => (
+              <button 
+                class="filter-btn rounded-full px-4 py-1.5 text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                data-filter={tag}
+              >
+                #{tag}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <!-- Status Filter -->
+        <div id="filter-status" class="hidden mb-6 items-center justify-between rounded-lg bg-blue-50 px-4 py-3 dark:bg-blue-900/20">
+          <span class="text-sm text-blue-800 dark:text-blue-200">
+            Menampilkan catatan dengan tag: <strong id="active-filter-name" class="font-bold"></strong>
+          </span>
+          <button id="clear-filter" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-300">
+            Hapus Filter
+          </button>
+        </div>
+
+        <!-- Pesan Jika Tidak Ada Hasil -->
+        <div id="no-results" class="hidden py-12 text-center">
+          <p class="text-lg text-gray-500 dark:text-gray-400">
+            Tidak ada catatan yang cocok dengan pencarian Anda.
+          </p>
+          <button id="reset-filters" class="mt-4 text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+            Reset Filter & Pencarian
+          </button>
+        </div>
+
+        <div class="space-y-6" id="til-list">
+          {sortedTil.map((item) => (
+            <article 
+              class="group relative rounded-xl border border-gray-200 bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 filter-item" 
+              data-tags={item.data.tags ? JSON.stringify(item.data.tags) : "[]"}
+              data-title={item.data.title.toLowerCase()}
+              data-description={(item.data.description || "").toLowerCase()}
+            >
+              <!-- Link Overlay -->
+              <a href={`/til/${item.id}`} class="absolute inset-0 z-10" />
+
+              <!-- Judul & Tanggal -->
+              <div class="mb-2 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+                <h2 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
+                  {item.data.title}
+                </h2>
+                <time
+                  datetime={new Date(item.data.date).toISOString()}
+                  class="shrink-0 text-sm text-gray-500 dark:text-gray-400"
+                >
+                  {new Intl.DateTimeFormat("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  }).format(new Date(item.data.date))}
+                </time>
+              </div>
+
+              <!-- Deskripsi -->
+              {item.data.description && (
+                <p class="relative z-0 mb-4 line-clamp-2 text-gray-600 dark:text-gray-300">
+                  {item.data.description}
+                </p>
+              )}
+
+              <!-- Tags Section -->
+              {item.data.tags && item.data.tags.length > 0 && (
+                <div class="relative z-0 mb-4 flex flex-wrap gap-2">
+                  {item.data.tags.map((tag) => (
+                    <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <!-- Link Baca Selengkapnya -->
+              <div class="relative z-0">
+                <span class="text-sm font-medium text-blue-600 group-hover:underline dark:text-blue-400">
+                  Baca selengkapnya &rarr;
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- Variabel DOM ---
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
+    const clearSearchBtn = document.getElementById('clear-search');
+    const noResultsMsg = document.getElementById('no-results');
+    const tilList = document.getElementById('til-list');
+    const tilItems = document.querySelectorAll('.filter-item');
+    
+    // Filter Vars
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const filterStatus = document.getElementById('filter-status');
+    const activeFilterName = document.getElementById('active-filter-name');
+    const clearFilterBtn = document.getElementById('clear-filter');
+    const resetFiltersBtn = document.getElementById('reset-filters');
+
+    let currentTagFilter = 'all';
+    let currentSearchQuery = '';
+
+    // --- Fungsi Utama Filter & Search ---
+    function filterItems() {
+      let visibleCount = 0;
+
+      tilItems.forEach(item => {
+        const htmlItem = item as HTMLElement;
+        const tags = JSON.parse(htmlItem.getAttribute('data-tags') || '[]');
+        const title = htmlItem.getAttribute('data-title') || '';
+        const description = htmlItem.getAttribute('data-description') || '';
+
+        // Cek Tag
+        const matchesTag = currentTagFilter === 'all' || tags.includes(currentTagFilter);
+        
+        // Cek Search (Judul atau Deskripsi)
+        const matchesSearch = title.includes(currentSearchQuery) || description.includes(currentSearchQuery);
+
+        if (matchesTag && matchesSearch) {
+          htmlItem.style.display = 'block';
+          visibleCount++;
+        } else {
+          htmlItem.style.display = 'none';
+        }
+      });
+
+      // Tampilkan pesan jika tidak ada hasil
+      if (noResultsMsg && tilList) {
+        if (visibleCount === 0) {
+          noResultsMsg.classList.remove('hidden');
+          tilList.classList.add('hidden');
+        } else {
+          noResultsMsg.classList.add('hidden');
+          tilList.classList.remove('hidden');
+        }
+      }
+    }
+
+    // --- Event Listeners: Search ---
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentSearchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+        
+        // Toggle tombol clear
+        if (clearSearchBtn) {
+          clearSearchBtn.classList.toggle('hidden', currentSearchQuery === '');
+        }
+        
+        filterItems();
+      });
+    }
+
+    if (clearSearchBtn) {
+      clearSearchBtn.addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.value = '';
+          currentSearchQuery = '';
+          clearSearchBtn.classList.add('hidden');
+          searchInput.focus();
+          filterItems();
+        }
+      });
+    }
+
+    // --- Event Listeners: Tags ---
+    function updateFilterButtons(activeTag: string) {
+      filterBtns.forEach(btn => {
+        const tag = btn.getAttribute('data-filter');
+        const isActive = tag === activeTag;
+        
+        if (isActive) {
+          btn.classList.remove('bg-gray-100', 'text-gray-600', 'dark:bg-gray-800', 'dark:text-gray-300');
+          btn.classList.add('bg-blue-600', 'text-white');
+        } else {
+          btn.classList.remove('bg-blue-600', 'text-white');
+          btn.classList.add('bg-gray-100', 'text-gray-600', 'dark:bg-gray-800', 'dark:text-gray-300');
+        }
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tag = btn.getAttribute('data-filter');
+        if (tag) {
+          currentTagFilter = tag;
+          updateFilterButtons(tag);
+          
+          // Update UI Status
+          if (filterStatus && activeFilterName) {
+            if (tag === 'all') {
+              filterStatus.classList.add('hidden');
+            } else {
+              filterStatus.classList.remove('hidden');
+              filterStatus.classList.add('flex');
+              activeFilterName.textContent = `#${tag}`;
+            }
+          }
+          filterItems();
+        }
+      });
+    });
+
+    if (clearFilterBtn) {
+      clearFilterBtn.addEventListener('click', () => {
+        currentTagFilter = 'all';
+        updateFilterButtons('all');
+        if (filterStatus) filterStatus.classList.add('hidden');
+        filterItems();
+      });
+    }
+
+    if (resetFiltersBtn) {
+      resetFiltersBtn.addEventListener('click', () => {
+        // Reset Search
+        currentSearchQuery = '';
+        if (searchInput) searchInput.value = '';
+        if (clearSearchBtn) clearSearchBtn.classList.add('hidden');
+        
+        // Reset Tag
+        currentTagFilter = 'all';
+        updateFilterButtons('all');
+        if (filterStatus) filterStatus.classList.add('hidden');
+        
+        filterItems();
+      });
+    }
+  </script>
+</Layout>   

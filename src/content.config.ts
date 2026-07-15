@@ -24,6 +24,7 @@ const til = defineCollection({
       description: z.string().optional(),
       draft: z.boolean().optional(),
       author: z.string().optional(),
+      tags: z.array(z.string()).optional(),
     }),
 });
 
