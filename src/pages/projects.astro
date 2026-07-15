@@ -4,27 +4,28 @@ import ProjectCard from "../components/ProjectCard.astro";
 import { projects } from "../data/projects";
 ---
 
-<Layout title="Eza — Web Developer">
-  <main>
-    <section class="px-0 py-1.5">
-      <div class="mx-auto max-w-[90ch] px-3 lg:px-0">
-        <div class="prose">
-          <h1 class="my-12 text-center text-3xl font-bold">My Projects</h1>
-          <div
-            class="grid grid-cols-1 gap-2 py-5 sm:grid-cols-2 md:grid-cols-3"
-          >
-            {
-              projects.map((project) => (
-                <ProjectCard
-                  title={project.title}
-                  description={project.description}
-                  github={project.github}
-                  image={project.image}
-                  stacks={project.stacks}
-                />
-              ))
-            }
-          </div>
+<Layout title="Projects | Eza">
+  <main class="w-full">
+    <section class="px-4 py-12 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-5xl">
+        <h1
+          class="mb-12 text-center text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white"
+        >
+          My Projects
+        </h1>
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            projects.map((project) => (
+              <ProjectCard
+                title={project.title}
+                description={project.description}
+                github={project.github}
+                image={project.image}
+                stacks={project.stacks}
+              />
+            ))
+          }
         </div>
       </div>
     </section>
