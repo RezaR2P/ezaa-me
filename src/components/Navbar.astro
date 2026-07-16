@@ -104,16 +104,19 @@
   </div>
 </nav>
 
-<!-- Script untuk Toggle Menu (Astro Client Side) -->
 <script>
-  const btn = document.getElementById("mobile-menu-btn");
-  const menu = document.getElementById("mobile-menu");
-  const menuIcon = document.getElementById("menu-icon");
-  const closeIcon = document.getElementById("close-icon");
+  function initMenu() {
+    const btn = document.getElementById("mobile-menu-btn");
+    const menu = document.getElementById("mobile-menu");
+    const menuIcon = document.getElementById("menu-icon");
+    const closeIcon = document.getElementById("close-icon");
 
-  btn?.addEventListener("click", () => {
-    menu?.classList.toggle("hidden");
-    menuIcon?.classList.toggle("hidden");
-    closeIcon?.classList.toggle("hidden");
-  });
+    btn?.addEventListener("click", () => {
+      menu?.classList.toggle("hidden");
+      menuIcon?.classList.toggle("hidden");
+      closeIcon?.classList.toggle("hidden");
+    });
+  }
+
+  document.addEventListener("astro:page-load", initMenu);
 </script>
