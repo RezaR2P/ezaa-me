@@ -1,9 +1,10 @@
 <nav
-  class="w-full border-b border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-500 dark:bg-gray-900/50"
+  class="relative z-50 w-full border-b border-gray-200 bg-white/50 backdrop-blur-sm dark:border-gray-500 dark:bg-gray-900/50"
 >
   <div
     class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8"
   >
+    <!-- Logo -->
     <div class="shrink-0">
       <a
         href="/"
@@ -13,9 +14,50 @@
       </a>
     </div>
 
-    <!-- Menu Links (Kanan/Tengah) -->
-    <div class="ml-auto">
-      <ul class="flex flex-col gap-6 p-0 md:flex-row md:items-center md:gap-8">
+    <!-- Mobile Menu Button (Hamburger) -->
+    <button
+      id="mobile-menu-btn"
+      class="p-2 text-gray-600 hover:text-blue-600 md:hidden dark:text-gray-300 dark:hover:text-white"
+      aria-label="Toggle menu"
+    >
+      <!-- Icon Menu (SVG) -->
+      <svg
+        id="menu-icon"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+      <!-- Icon Close (SVG) - Hidden by default -->
+      <svg
+        id="close-icon"
+        class="hidden h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Menu Links -->
+    <div
+      id="mobile-menu"
+      class="absolute top-full left-0 hidden w-full border-b border-gray-200 bg-white/95 backdrop-blur-md md:static md:block md:w-auto md:border-none md:bg-transparent dark:border-gray-500 dark:bg-gray-900/95"
+    >
+      <ul
+        class="flex flex-col gap-6 p-6 text-center md:flex-row md:items-center md:gap-8 md:p-0"
+      >
         <li>
           <a
             href="/"
@@ -61,3 +103,17 @@
     </div>
   </div>
 </nav>
+
+<!-- Script untuk Toggle Menu (Astro Client Side) -->
+<script>
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
+  const menuIcon = document.getElementById("menu-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  btn?.addEventListener("click", () => {
+    menu?.classList.toggle("hidden");
+    menuIcon?.classList.toggle("hidden");
+    closeIcon?.classList.toggle("hidden");
+  });
+</script>
