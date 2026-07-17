@@ -7,8 +7,6 @@ author: "Reza"
 tags: ["iot", "esp32", "gps-tracker", "backend", "express", "socket.io"]
 ---
 
-# Setup Backend Express.js untuk IoT GPS Tracker
-
 Hari ini saya belajar cara membangun arsitektur backend menggunakan **Express.js** yang terintegrasi dengan database **MySQL** dan **WebSockets (Socket.io)**. Backend ini dirancang untuk menerima data koordinat secara _real-time_ dari perangkat ESP32, menyimpannya ke database, dan meneruskannya langsung ke aplikasi web frontend.
 
 ## 1. Inisialisasi Projek & Struktur Folder

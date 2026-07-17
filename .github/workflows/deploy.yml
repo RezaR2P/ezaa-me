@@ -14,14 +14,21 @@ jobs:
     steps:
       # 1. Checkout kode sumber (wajib agar file ada di server)
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses:
+          actions/checkout@v4
 
-      # 2. Jalankan perintah deployment langsung di server
-      # Tidak perlu SSH lagi karena kita sudah ada di dalamnya!
+          # 2. Jalankan perintah deployment langsung di server
       - name: Deploy Application
         run: |
           echo "Memulai deployment di server lokal..."
           cd ~/ezaa-me
-          git pull origin main
+
+          # 1. Ambil riwayat commit terbaru dari GitHub tanpa menggabungkannya dulu
+          git fetch origin main
+
+          # 2. Paksa branch lokal untuk sama persis dengan yang ada di GitHub (Menghapus divergent/konflik)
+          git reset --hard origin/main
+
+          # 3. Build ulang container Docker
           docker compose up -d --build
           echo "Deployment selesai!"
