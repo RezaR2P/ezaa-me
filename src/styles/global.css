@@ -1,2 +1,4 @@
 @import "tailwindcss";
+@source "../content/**/*.md";
+@source "../content/**/*.mdx";
 @plugin "@tailwindcss/typography";
